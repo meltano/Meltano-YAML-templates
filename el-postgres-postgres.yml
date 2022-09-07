@@ -1,0 +1,33 @@
+version: 1
+default_environment: dev
+environments:
+- name: dev
+- name: staging
+- name: prod
+
+plugins:
+  extractors:
+  - name: tap-postgres
+    variant: transferwise
+    pip_url: pipelinewise-tap-postgres
+    config:
+      host: host.docker.internal #TODO replace with your host
+      port: 5432 #TODO replace with your port, default is 5432
+      user: admin #TODO replace
+      password: password #TODO replace 
+      dbname: demo_source #TODO replace 
+      default_replication_method: FULL_TABLE #TODO replace if wanted.
+    select: # TODO define what tables/streams you want to retrieve
+      - public-raw_customers.* # select all three attributes from the public schema inside the raw_customers table. 
+                               # use meltano select tap-postgres --list --all to view all selectable attributes
+
+  loaders: 
+  - name: target-postgres
+    variant: transferwise
+    pip_url: pipelinewise-target-postgres
+    config:
+      host: host.docker.internal #TODO replace with your host
+      port: 5432 #TODO replace with your port, default is 5432
+      user: admin #TODO replace
+      password: password #TODO replace
+      dbname: demo_target #TODO replace

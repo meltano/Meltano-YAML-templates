@@ -1,0 +1,55 @@
+version: 1
+default_environment: dev
+environments:
+- name: dev
+- name: staging
+- name: prod
+
+plugins:
+  extractors:
+  - name: tap-s3-csv
+    variant: transferwise
+    pip_url: pipelinewise-tap-s3-csv
+    config:
+      bucket: test #TODO replace with your bucketname
+      tables:
+      - search_prefix: '' #TODO replace
+        search_pattern: raw_customers.csv #TODO replace
+        table_name: raw_customers #TODO replace
+        key_properties: [id] #TODO replace
+        delimiter: ',' #TODO possibly replace
+      - search_prefix: '' #TODO replace
+        search_pattern: raw_orders.csv #TODO replace
+        table_name: raw_orders #TODO replace
+        key_properties: [id] #TODO replace
+        delimiter: ',' #TODO replace
+      #TODO possibly extend, if you want more CSVs & tables!
+      start_date: 2000-01-01T00:00:00Z #TODO is needed; provide one.
+      #aws_endpoint_url: http://host.docker.internal:5005 # usually not necessary
+      aws_access_key_id: s #TODO replace
+      aws_secret_access_key: s #TODO replace
+      aws_default_region: us-east-1 #TODO replace
+
+  loaders:
+  - name: target-postgres
+    variant: transferwise
+    pip_url: pipelinewise-target-postgres
+    config:
+      host: host.docker.internal #TODO replace
+      port: 5432 #TODO replace default is 5432
+      user: admin #TODO replace
+      password: password #TODO replace
+      dbname: demo #TODO replace
+  
+  transformers:
+  - name: dbt-postgres
+    variant: dbt-labs
+    pip_url: dbt-core~=1.1.0 dbt-postgres~=1.1.0
+    config:
+      host: host.docker.internal #TODO replace
+      user: admin #TODO replace
+      password: password #TODO replace
+      port: 5432 #TODO replace default is 5432
+      dbname: demo #TODO replace
+      schema: analytics #TODO replace
+      source_schema: tap_s3_csv #TODO possibly if you change it on top as well. By default the CSV tap will write into this schema!
