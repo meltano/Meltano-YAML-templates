@@ -1,0 +1,36 @@
+version: 1
+default_environment: dev
+environments:
+- name: dev
+  config:
+  env:
+      PG_HOST: postgres # TODO exchange for your variables then you can load them with os.getenv() inside Python
+      PG_PORT: "5432" # TODO exchange for your variables then you can load them with os.getenv() inside Python
+      PG_DB: demo # TODO exchange for your variables then you can load them with os.getenv() inside Python
+      PG_USER: admin # TODO exchange for your variables then you can load them with os.getenv() inside Python
+      PG_PWD: password # TODO exchange for your variables then you can load them with os.getenv() inside Python
+
+- name: staging
+- name: prod
+
+plugins:
+  utilities: # ```meltano invoke jupyterlab:lab``` will start up the lab...
+  - name: jupyterlab
+    namespace: jupyterlab
+    pip_url: jupyterlab pandas matplotlib sqlalchemy psycopg2-binary papermill
+    executable: jupyter
+    commands:
+      launch:
+        args: lab 
+        description: Start lab server
+      execute:
+        args: nbconvert --to notebook --execute notebook/your_notebook.ipynb # TODO exchange notebook/your_notebook.ipynb
+        description: Execute notebook, without any parametrization
+          
+  - name: papermill
+    inherit_from: jupyterlab
+    executable: papermill
+    commands:
+      execute:
+        args: notebook/sql_magic.ipynb output/output.ipynb -p price_1 1000 # TODO exchange all arguments for yours.
+        description: Execute notebook using papermill with additional set parameters

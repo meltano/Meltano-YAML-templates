@@ -54,5 +54,5 @@ Yes! Please contribute your meltano samples if they aren' already contained in h
 - [el-postgres-postgres.yml](el-postgres-postgres.yml): E & L between two different PostgreSQL databases.
 - [el-s3-csv-postgres.yml](el-postgres-postgres.yml): E & L between an AWS S3 bucket with 3 CSV files and a PostgreSQL database.
 - [elt-s3-csv-dbt-postgres.yml](elt-s3-csv-dbt-postgres.yml): ELT process, AWS S3 bucket with 3 CSV files into a PostgreSQL database, topped off with dbt run.
-
 - [elt-s3-csv-dbt-postgres-datahub.yml](elt-s3-csv-dbt-postgres-datahub.yml): ELT process with the DataHub utility. AWS S3 bucket with 3 CSV files into a PostgreSQL database, topped off with dbt run & DataHub as metadata catalog ingesting data from all three sources (S3, PostgreSQL & dbt).
+- [sql-plugin-jupyter.yml](sql-plugin-jupyter.yml): Jupyter notebook with connection variables loaded into environment and papermill to execute it.
